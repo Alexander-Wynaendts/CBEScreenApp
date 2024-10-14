@@ -20,7 +20,7 @@ def linkedin_founder_scrape(founder_name):
     url = "https://api.dataforseo.com/v3/serp/google/organic/live/advanced"
 
     # Correct the payload format
-    payload = f"[{{\"keyword\":\"{query}\", \"location_code\":2826, \"language_code\":\"en\", \"device\":\"desktop\", \"depth\":5}}]".encode('utf-8')
+    payload = f"[{{\"keyword\":\"{query}\", \"location_code\":2826, \"language_code\":\"en\", \"device\":\"desktop\", \"depth\":8}}]".encode('utf-8')
 
     headers = {
         'Authorization': f'Basic {dataforseo_auth}',  # Using the API key from .env
@@ -42,12 +42,17 @@ def linkedin_founder_scrape(founder_name):
         })
         return linkedin_founder_profile
 
-
+    # Loop through the items and process each one
     for item in items:
         if item:  # Ensure the item is not None
+            linkedin_url = item.get('url', '-')
+            # Skip the result if "company" is in the URL
+            if "company" in linkedin_url:
+                continue
+
             linkedin_title = item.get('title', '-')
             linkedin_description = item.get('description', '-')
-            linkedin_url = item.get('url', '-')
+
         else:
             linkedin_title = linkedin_description = linkedin_url = "-"
 
@@ -74,8 +79,8 @@ def founder_website_retrieval(linkedin_url):
         json_data = response.json()
         # Safeguard against missing 'company' key in the JSON response
         if json_data and json_data["company"]:
-            linkedin_company_url = json_data["company"].get("linkedInUrl", "")
-            website_url = json_data["company"].get("websiteUrl", "")
+            linkedin_company_url = json_data["company"].get("linkedInUrl", "-") if json_data["company"].get("linkedInUrl") is not None else "-"
+            website_url = json_data["company"].get("websiteUrl", "-") if json_data["company"].get("websiteUrl") is not None else "-"
             return linkedin_company_url, website_url
         else:
             # Return empty values if no company data found
@@ -90,13 +95,16 @@ def linkedin_google_scrape(enterprise_name, founder_names):
 
     terms_to_check = [
     # English
-    'entrepreneur', 'founder',
+    'entrepreneur', 'founder', 'chief executive officer', 'ceo', 'cto', 'coo', 'chief operating officer', 'chief technology officer',
+
     # French
-    'entrepreneur', 'fondateur',
+    'entrepreneur', 'entrepreneuse', 'fondateur', 'fondatrice',
+
     # Dutch
-    'ondernemer', 'oprichter',
+    'ondernemer', 'onderneemster', 'oprichter', 'oprichtster',
+
     # German
-    'unternehmer', 'gründer',
+    'unternehmer', 'unternehmerin', 'gründer', 'gründerin',
 ]
 
     linkedin_founder_profiles = []
