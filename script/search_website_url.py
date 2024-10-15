@@ -44,15 +44,12 @@ def linkedin_founder_scrape(founder_name):
 
     # Loop through the items and process each one
     for item in items:
-        if item:  # Ensure the item is not None
-            linkedin_url = item.get('url', '-')
-            # Skip the result if "company" is in the URL
-            if "company" in linkedin_url:
-                continue
+        linkedin_url = item.get('url', '-')
 
+        # Check if "/in/" is in the LinkedIn URL, otherwise set all values to "-"
+        if "/in/" in linkedin_url:
             linkedin_title = item.get('title', '-')
             linkedin_description = item.get('description', '-')
-
         else:
             linkedin_title = linkedin_description = linkedin_url = "-"
 
