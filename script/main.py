@@ -4,7 +4,7 @@ from .cbe_screening import cbe_screening
 import time
 import pandas as pd
 
-def process_in_batches(data, batch_size=50):
+def process_in_batches(data, batch_size=25):
     num_batches = len(data) // batch_size + 1
 
     results = []
@@ -48,7 +48,7 @@ def main(files):
         return startup_data
 
     # Process the data in batches to prevent overloading
-    startup_data = process_in_batches(startup_data, batch_size=50)
+    startup_data = process_in_batches(startup_data, batch_size=25)
 
     # Print the final number of rows after the entire process
     print(f"Final Screening: {len(startup_data)}")
