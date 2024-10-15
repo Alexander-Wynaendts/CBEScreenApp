@@ -17,6 +17,8 @@ def main(files):
     # Format the input files
     startup_data = cbe_formatting(files)
 
+    startup_data = startup_data[320:370]
+
     # Print the number of filtered rows based on NACE code
     print(f"Nace Code Filter: {len(startup_data)}")
 
