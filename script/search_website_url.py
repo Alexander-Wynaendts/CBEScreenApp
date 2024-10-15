@@ -186,6 +186,6 @@ def search_website_url(startup_data):
     # Combine the rows with existing Website URLs and newly updated rows
     startup_data = pd.concat([data_with_website, data_with_no_website], ignore_index=True)
 
-    #startup_data = startup_data[startup_data['Website URL'] != '-']
+    startup_data = startup_data[startup_data['Website URL'] != '-']
 
     return startup_data
