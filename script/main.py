@@ -6,8 +6,8 @@ import time
 def main(files):
 
     print("="*60)
-    print("⚠️ WARNING: Process will shut down after 4 hours!")
-    print("If you see more than 'Nace Code Filter: **5000**' messages,")
+    print("⚠️ WARNING: Process will shut down after 12 hours!")
+    print("If you see more than 'Nace Code Filter: **4000**' messages,")
     print("please contact the developer immediately to resolve the issue.")
     print("="*60)
 

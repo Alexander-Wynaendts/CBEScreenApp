@@ -1,9 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-import os
-from dotenv import load_dotenv
-
 import time
 import random
 import re
@@ -167,7 +164,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 def cbe_screening(startup_data):
     """
-    Process each startup based on the given enterprise number in parallel using ThreadPoolExecutor.
+    Process each startup based on the given enterprise number sequentially.
     It returns the CBE info, website, email, and founding year if it's a valid startup.
     The startup_data is assumed to be a DataFrame or dictionary-like object containing the 'EntityNumber' of the startups.
     """
@@ -176,17 +173,15 @@ def cbe_screening(startup_data):
 
     # Define a helper function for processing each row
     def process_enterprise(enterprise_number):
-        # Simulating a delay for each request
-        time.sleep(random.uniform(20, 40))  # Random sleep between 20 and 40 seconds
+        # Simulating a delay for each request (reduced to 5-15 seconds)
+        time.sleep(random.uniform(5, 15))  # Random sleep between 5 and 15 seconds
         return cbe_analysis(enterprise_number)
 
-    # Use ThreadPoolExecutor to process each enterprise in parallel
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        # Display progress while processing each startup
-        all_results = []
-        for idx, result in enumerate(executor.map(process_enterprise, startup_data['EntityNumber'])):
-            all_results.append(result)
-            print(f"Progress: {idx + 1}/{len(startup_data)}")  # Display progress
+    # Process each enterprise sequentially (no parallel execution)
+    for idx, enterprise_number in enumerate(startup_data['EntityNumber']):
+        result = process_enterprise(enterprise_number)
+        all_results.append(result)
+        print(f"Progress: {idx + 1}/{len(startup_data)}")  # Display progress
 
     # Prepare to update the DataFrame with the results
     rows_to_drop = []
