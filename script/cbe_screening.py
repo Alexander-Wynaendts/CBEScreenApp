@@ -174,7 +174,7 @@ def cbe_screening(startup_data):
     # Define a helper function for processing each row
     def process_enterprise(enterprise_number):
         # Simulating a delay for each request (reduced to 5-15 seconds)
-        time.sleep(random.uniform(5, 15))  # Random sleep between 5 and 15 seconds
+        time.sleep(random.uniform(3, 7))  # Random sleep between 5 and 15 seconds
         return cbe_analysis(enterprise_number)
 
     # Process each enterprise sequentially (no parallel execution)
