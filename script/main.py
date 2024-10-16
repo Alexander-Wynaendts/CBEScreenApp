@@ -4,7 +4,7 @@ from .cbe_screening import cbe_screening
 import time
 import pandas as pd
 
-def process_in_batches(data, batch_size=25):
+def process_cbe_screening_in_batches(data, batch_size=25):
     num_batches = len(data) // batch_size + 1
 
     results = []
@@ -14,23 +14,16 @@ def process_in_batches(data, batch_size=25):
         batch_data = data[batch_start:batch_end]
 
         if len(batch_data) > 0:
-            print(f"Processing batch {batch_num + 1} / {num_batches}")
-
-            # Apply CBE screening to the data
+            print(f"Processing CBE screening for batch {batch_num + 1} / {num_batches}")
             batch_data = cbe_screening(batch_data)
-
-            # If the batch is not empty, search for website URLs
-            if not batch_data.empty:
-                batch_data = search_website_url(batch_data)
-
             results.append(batch_data)
 
-            # Pause between requests to avoid overwhelming the server
+            # Pause between batches if needed
             time.sleep(2)  # Adjust the sleep time as necessary
 
-    # Combine all results into a single DataFrame
-    final_result = pd.concat(results, ignore_index=True)
-    return final_result
+    # Combine all batches into a single DataFrame
+    screened_data = pd.concat(results, ignore_index=True)
+    return screened_data
 
 def main(files):
 
@@ -47,8 +40,12 @@ def main(files):
     if startup_data.empty:
         return startup_data
 
-    # Process the data in batches to prevent overloading
-    startup_data = process_in_batches(startup_data, batch_size=25)
+    # Process CBE screening in batches
+    startup_data = process_cbe_screening_in_batches(startup_data, batch_size=25)
+
+    # Now that all CBE screening is done, proceed with searching for website URLs
+    print("Proceeding to search website URLs...")
+    #startup_data = search_website_url(startup_data)
 
     # Print the final number of rows after the entire process
     print(f"Final Screening: {len(startup_data)}")
